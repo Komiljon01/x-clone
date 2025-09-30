@@ -63,19 +63,13 @@ export default async function Post({ type }: { type?: "status" | "comment" }) {
         <div className="flex flex-1 flex-col gap-2">
           {/* TOP */}
           <div className="flex w-full justify-between">
-            <Link href={`/lamaWebDev`} className="flex gap-4">
+            <Link href={`/komiljon`} className="flex gap-4">
               <div
                 className={`${
                   type !== "status" && "hidden"
-                } relative h-10 w-10 overflow-hidden rounded-full`}
+                } relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-green-800 text-xl text-white`}
               >
-                <Image
-                  path="xclone/general/avatar.png"
-                  alt=""
-                  w={100}
-                  h={100}
-                  tr={true}
-                />
+                K
               </div>
               <div
                 className={`flex flex-wrap items-center gap-2 ${
@@ -98,7 +92,7 @@ export default async function Post({ type }: { type?: "status" | "comment" }) {
           </div>
 
           {/* TEXT & MEDIA */}
-          <Link href={`/lamaWebDev/status/123`}>
+          <Link href={`/komiljon/status/123`}>
             <p className={`${type === "status" && "text-lg"}`}>
               Lorem ipsum dolor sit amet consectetur adipisicing elit. Harum,
               animi. Laborum commodi aliquam alias molestias odio, ab in,

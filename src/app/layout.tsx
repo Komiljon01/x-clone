@@ -3,8 +3,10 @@ import "./globals.css";
 
 export default function RootLayout({
   children,
+  modal,
 }: Readonly<{
   children: React.ReactNode;
+  modal: React.ReactNode;
 }>) {
   return (
     <html lang="en">
@@ -15,6 +17,7 @@ export default function RootLayout({
           </div>
           <div className="border-borderGray flex-1 border-x-[1px] lg:min-w-[600px]">
             {children}
+            {modal}
           </div>
           <div className="ml-4 hidden flex-1 md:ml-8 lg:flex">
             <RightBar />

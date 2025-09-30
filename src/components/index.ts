@@ -7,3 +7,5 @@ export { default as ImageEditor } from "./ImageEditor";
 export { default as Search } from "./Search";
 export { default as Recommendations } from "./Recommendations";
 export { default as PopularTags } from "./PopularTags";
+export { default as Comments } from "./Comments";
+export {default as Post} from "./Post";
