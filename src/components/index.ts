@@ -4,3 +4,6 @@ export { default as Image } from "./Image";
 export { default as Feed } from "./Feed";
 export { default as Share } from "./Share";
 export { default as ImageEditor } from "./ImageEditor";
+export { default as Search } from "./Search";
+export { default as Recommendations } from "./Recommendations";
+export { default as PopularTags } from "./PopularTags";
