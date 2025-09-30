@@ -1,6 +1,6 @@
-import Image from "next/image";
 import Link from "next/link";
 import { FaXTwitter } from "react-icons/fa6";
+import { Image } from ".";
 
 const menuList = [
   {
@@ -67,7 +67,7 @@ const menuList = [
 
 const LeftBar = () => {
   return (
-    <div className="sticky top-0 flex h-screen flex-col justify-between pt-2 pb-8">
+    <div className="sticky top-0 flex min-h-screen flex-col justify-between pt-2 pb-8">
       {/* LOGO MENU BUTTON */}
       <div className="xxl:items-start flex flex-col items-center gap-4 text-lg">
         {/* LOGO */}
@@ -75,7 +75,6 @@ const LeftBar = () => {
           href="/"
           className="rounded-full p-2 text-2xl font-bold hover:bg-[#181818]"
         >
-          {/* <Image src="/icons/logo.svg" alt="logo" width={24} height={24} /> */}
           <FaXTwitter width={24} height={24} />
         </Link>
         {/* MENU LIST */}
@@ -87,10 +86,10 @@ const LeftBar = () => {
               key={item.id}
             >
               <Image
-                src={`icons/${item.icon}`}
+                path={`xclone/icons/${item.icon}`}
                 alt={item.name}
-                width={24}
-                height={24}
+                w={24}
+                h={24}
               />
               <span className="xxl:inline hidden">{item.name}</span>
             </Link>
@@ -101,7 +100,7 @@ const LeftBar = () => {
           href="/compose/post"
           className="bg-iwidthhite xxl:hidden flex h-12 w-12 items-center justify-center rounded-full text-black"
         >
-          <Image src="icons/post.svg" alt="new post" width={24} height={24} />
+          <Image path="xclone/icons/post.svg" alt="new post" w={24} h={24} />
         </Link>
         <Link
           href="/compose/post"
@@ -114,13 +113,6 @@ const LeftBar = () => {
       <div className="my-5 flex items-center justify-between pb-5">
         <div className="flex items-center gap-2">
           <div className="relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-green-800">
-            {/* <Image
-              src="/general/avatar.png"
-              alt="lama dev"
-              width={100}
-              height={100}
-              // tr={true}
-            /> */}
             K
           </div>
           <div className="xxl:flex hidden flex-col">
