@@ -1,7 +1,19 @@
 import { Feed, Image } from "@/components";
+import { prisma } from "@/prisma";
 import Link from "next/link";
+import { notFound } from "next/navigation";
 
-export default function UserPage() {
+type IProps = {
+  params: Promise<{ username: string }>;
+};
+
+export default async function UserPage({ params }: IProps) {
+  const { username } = await params;
+
+  const user = await prisma.user.findUnique({ where: { username } });
+
+  if (!user) notFound();
+
   return (
     <div className="">
       {/* PROFILE TITLE */}
@@ -88,7 +100,7 @@ export default function UserPage() {
       </div>
 
       {/* FEED */}
-      <Feed />
+      <Feed userProfileId={user.id} />
     </div>
   );
 }

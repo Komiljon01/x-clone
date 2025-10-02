@@ -28,7 +28,7 @@ export default async function Post({ type }: { type?: "status" | "comment" }) {
 
   const fileDetails = await getFileDetails("68dbbd925c7cd75eb82b11c4");
   // const fileDetails = await getFileDetails("68dbcbbf5c7cd75eb89209a8");
-  console.log("File details", fileDetails);
+  // console.log("File details", fileDetails);
 
   return (
     <div className="border-borderGray border-y-[1px] p-4">
