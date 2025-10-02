@@ -55,7 +55,7 @@ model Post {
 
   parentPostId Int?
   parentPost   Post?  @relation("PostComments", fields: [parentPostId], references: [id])
-  parentPosts  Post[] @relation("PostComments")
+  comments  Post[] @relation("PostComments")
 
   likes Like[]
 

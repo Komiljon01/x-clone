@@ -1,16 +1,16 @@
 import { prisma } from "@/prisma";
 import { auth } from "@clerk/nextjs/server";
-import Post from "./Post";
-import InfiniteFeed from "./InfiniteFeed";
+import { NextRequest } from "next/server";
 
-export default async function Feed({
-  userProfileId,
-}: {
-  userProfileId?: string;
-}) {
+export async function GET(request: NextRequest) {
   const { userId } = await auth();
-
   if (!userId) return;
+
+  const searchParams = request.nextUrl.searchParams;
+  const userProfileId = searchParams.get("user");
+
+  const page = searchParams.get("cursor");
+  const LIMIT = 3;
 
   const whereCondition = userProfileId
     ? { userId: userProfileId, parentPostId: null }
@@ -47,18 +47,14 @@ export default async function Feed({
       rePosts: { where: { userId: userId }, select: { id: true } },
       saves: { where: { userId: userId }, select: { id: true } },
     },
-    take: 3,
-    skip: 0,
-    orderBy: { createdAt: "desc" },
+    take: LIMIT,
+    skip: (Number(page) - 1) * LIMIT,
   });
 
-  return (
-    <div className="">
-      {posts.map((post) => (
-        <Post key={post.id} post={post} />
-      ))}
+  const totalPosts = await prisma.post.count({ where: whereCondition });
+  const hasMore = Number(page) * LIMIT < totalPosts;
 
-      <InfiniteFeed />
-    </div>
-  );
+  new Promise((resolve) => setTimeout(resolve, 3000));
+
+  return Response.json({ posts, hasMore });
 }
