@@ -3,31 +3,31 @@ import { auth } from "@clerk/nextjs/server";
 import { NextRequest } from "next/server";
 
 export async function GET(request: NextRequest) {
-  const { userId } = await auth();
-  if (!userId) return;
-
   const searchParams = request.nextUrl.searchParams;
   const userProfileId = searchParams.get("user");
-
   const page = searchParams.get("cursor");
   const LIMIT = 3;
 
-  const whereCondition = userProfileId
-    ? { userId: userProfileId, parentPostId: null }
-    : {
-        parentPostId: null,
-        userId: {
-          in: [
-            userId,
-            ...(
-              await prisma.follow.findMany({
-                where: { followerId: userId },
-                select: { followingId: true },
-              })
-            ).map((follow) => follow.followingId),
-          ],
-        },
-      };
+  const { userId } = await auth();
+  if (!userId) return;
+
+  const whereCondition =
+    userProfileId !== "undefined"
+      ? { userId: userProfileId as string, parentPostId: null }
+      : {
+          parentPostId: null,
+          userId: {
+            in: [
+              userId,
+              ...(
+                await prisma.follow.findMany({
+                  where: { followerId: userId },
+                  select: { followingId: true },
+                })
+              ).map((follow) => follow.followingId),
+            ],
+          },
+        };
 
   const posts = await prisma.post.findMany({
     where: whereCondition,

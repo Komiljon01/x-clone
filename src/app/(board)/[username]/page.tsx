@@ -1,5 +1,6 @@
-import { Feed, Image } from "@/components";
+import { Feed, FollowButton, Image } from "@/components";
 import { prisma } from "@/prisma";
+import { auth } from "@clerk/nextjs/server";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
@@ -8,9 +9,18 @@ type IProps = {
 };
 
 export default async function UserPage({ params }: IProps) {
+  const { userId } = await auth();
   const { username } = await params;
 
-  const user = await prisma.user.findUnique({ where: { username } });
+  const user = await prisma.user.findUnique({
+    where: { username: username },
+    include: {
+      _count: { select: { followers: true, followings: true } },
+      followings: userId ? { where: { followerId: userId } } : undefined,
+    },
+  });
+
+  console.log("USER malumotlari", user);
 
   if (!user) notFound();
 
@@ -21,7 +31,7 @@ export default async function UserPage({ params }: IProps) {
         <Link href="/">
           <Image path="xclone/icons/back.svg" alt="back" w={24} h={24} />
         </Link>
-        <h1 className="text-lg font-bold">Komiljon</h1>
+        <h1 className="text-lg font-bold">{user.displayName}</h1>
       </div>
 
       {/* INFO */}
@@ -31,7 +41,7 @@ export default async function UserPage({ params }: IProps) {
           {/* COVER */}
           <div className="relative aspect-[3/1] w-full">
             <Image
-              path="xclone/general/post.jpeg"
+              path={user.cover || "xclone/general/cover-x.jpg"}
               alt=""
               w={600}
               h={200}
@@ -40,8 +50,14 @@ export default async function UserPage({ params }: IProps) {
           </div>
 
           {/* AVATAR */}
-          <div className="absolute left-4 flex aspect-square w-1/5 -translate-y-1/2 items-center justify-center overflow-hidden rounded-full border-4 border-black bg-green-800 text-4xl">
-            K
+          <div className="absolute left-4 flex aspect-square w-1/5 -translate-y-1/2 items-center justify-center overflow-hidden rounded-full border-4 border-black bg-white">
+            <Image
+              path={user.img || "xclone/general/no-avatar.webp"}
+              alt=""
+              w={100}
+              h={100}
+              tr={true}
+            />
           </div>
         </div>
         <div className="flex w-full items-center justify-end gap-2 p-2">
@@ -54,45 +70,59 @@ export default async function UserPage({ params }: IProps) {
           <div className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border-[1px] border-gray-500">
             <Image path="xclone/icons/message.svg" alt="more" w={20} h={20} />
           </div>
-          <button className="rounded-full bg-white px-4 py-2 font-bold text-black">
-            Follow
-          </button>
+          {userId && (
+            <FollowButton
+              userId={userId}
+              isFollowed={!!user.followings.length}
+            />
+          )}
         </div>
 
         {/* USER DETAILS */}
         <div className="flex flex-col gap-2 p-4">
           {/* USERNAME & HANDLE */}
           <div className="">
-            <h1 className="text-2xl font-bold">Komiljon</h1>
-            <span className="text-textGray text-sm">@komiljon22</span>
+            <h1 className="text-2xl font-bold">{user.displayName}</h1>
+            <span className="text-textGray text-sm">@{user.username}</span>
           </div>
-          <p>Frontend developer</p>
+          {user.bio && <p>{user.bio}</p>}
 
           {/* JOB & LOCATION & DATE */}
           <div className="text-textGray flex gap-4 text-[15px]">
-            <div className="flex items-center gap-2">
-              <Image
-                path="xclone/icons/userLocation.svg"
-                alt="location"
-                w={20}
-                h={20}
-              />
-              <span>Uzbekistan</span>
-            </div>
+            {user.location && (
+              <div className="flex items-center gap-2">
+                <Image
+                  path="xclone/icons/userLocation.svg"
+                  alt="location"
+                  w={20}
+                  h={20}
+                />
+                <span>{user.location}</span>
+              </div>
+            )}
             <div className="flex items-center gap-2">
               <Image path="xclone/icons/date.svg" alt="date" w={20} h={20} />
-              <span>Joined May 2025</span>
+              <span>
+                Joined{" "}
+                {new Date(user.createdAt.toString()).toLocaleDateString(
+                  "en-US",
+                  {
+                    month: "long",
+                    year: "numeric",
+                  },
+                )}
+              </span>
             </div>
           </div>
 
           {/* FOLLOWINGS & FOLLOWERS */}
           <div className="flex gap-4">
             <div className="flex items-center gap-2">
-              <span className="font-bold">45</span>
+              <span className="font-bold">{user._count.followers}</span>
               <span className="text-textGray text-[15px]">Followers</span>
             </div>
             <div className="flex items-center gap-2">
-              <span className="font-bold">81</span>
+              <span className="font-bold">{user._count.followings}</span>
               <span className="text-textGray text-[15px]">Followings</span>
             </div>
           </div>

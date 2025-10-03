@@ -58,7 +58,7 @@ export default async function Feed({
         <Post key={post.id} post={post} />
       ))}
 
-      <InfiniteFeed />
+      <InfiniteFeed userProfileId={userProfileId} />
     </div>
   );
 }

@@ -1,6 +1,21 @@
+import { Post as PostType } from "@prisma/client";
 import { Post } from ".";
 
-export default function Comments() {
+type TPost = PostType & {
+  user: { displayName: string | null; username: string; img: string | null };
+  _count: { likes: number; comments: number; rePosts: number };
+  likes: { id: number }[];
+  rePosts: { id: number }[];
+  saves: { id: number }[];
+};
+
+type TComments = {
+  comments: TPost[];
+  postId: number;
+  username: string;
+};
+
+export default function Comments({ comments, postId, username }: TComments) {
   return (
     <div className="">
       <form className="flex items-center justify-between gap-4 p-4">
@@ -16,13 +31,10 @@ export default function Comments() {
           Reply
         </button>
       </form>
-      
-      <Post />
-      <Post />
-      <Post />
-      <Post />
-      <Post />
-      <Post />
+
+      {comments.map((comment) => (
+        <Post key={comment.id} post={comment} type="comment" />
+      ))}
     </div>
   );
 }

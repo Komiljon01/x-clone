@@ -87,7 +87,7 @@ export default function Post({
               <div
                 className={`${
                   type !== "status" && "hidden"
-                } relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-green-800 text-xl text-white`}
+                } relative flex h-10 w-10 items-center justify-center overflow-hidden rounded-full bg-white`}
               >
                 <CustomImage
                   path={
@@ -123,7 +123,9 @@ export default function Post({
           </div>
 
           {/* TEXT & MEDIA */}
-          <Link href={`/komiljon/status/123`}>
+          <Link
+            href={`/${originalPost.user.username}/status/${originalPost.id}`}
+          >
             <p className={`${type === "status" && "text-lg"}`}>
               {originalPost.desc}
             </p>
